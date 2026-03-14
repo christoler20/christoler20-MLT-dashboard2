@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+*.egg
+.venv/
+venv/
+env/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Data (large files — keep structure, ignore binaries)
+data/*.xlsx
+data/*.csv
+*.xlsx
+*.csv
+
+# Jupyter
+.ipynb_checkpoints/
