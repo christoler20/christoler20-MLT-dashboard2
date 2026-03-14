@@ -51,7 +51,7 @@ ALL_OUTCOME_STATUSES = POSITIVE_STATUSES + NEGATIVE_STATUSES
 
 TRAIN_COHORTS = ["CP 2018", "CP 2020", "CP 2021", "CP 2022", "CP 2023"]
 VALIDATION_COHORT = "CP 2024"
-THRESHOLD = 0.50
+THRESHOLD = 0.43
 
 FORTUNE_500 = {
     "Amazon", "Target", "Google", "Visa Inc.", "Dell Technologies Inc.",
@@ -710,12 +710,12 @@ with k1:
 with k2:
     st.markdown(kpi_html(
         "Pred. Offered", f"{pred_offered:,}", "accent-green",
-        "Applications predicted to receive an offer (probability ≥ 0.50)."
+        "Applications predicted to receive an offer (probability ≥ 0.43)."
     ), unsafe_allow_html=True)
 with k3:
     st.markdown(kpi_html(
         "Pred. Denied", f"{pred_denied:,}", "accent-red",
-        "Applications predicted to NOT receive an offer (probability < 0.50)."
+        "Applications predicted to NOT receive an offer (probability < 0.43)."
     ), unsafe_allow_html=True)
 with k4:
     st.markdown(kpi_html(
@@ -808,7 +808,7 @@ with tab_home:
         <div class="section-card">
             <div class="section-title">Understanding Likelihood Flags</div>
             <div class="section-caption">
-                Every scored application receives a colour-coded flag based on
+                Every scored application receives a color-coded flag based on
                 its predicted offer probability.
             </div>
             <div style="display:flex;gap:1.2rem;flex-wrap:wrap;">
@@ -965,7 +965,7 @@ with tab_home:
                     </ol>
                     <p style="font-size:.78rem;color:#6B7280;margin-top:.5rem;">
                         <em>Tip: The &ldquo;Suggested Coach Action&rdquo; column
-                        provides a starting point for each flag colour &mdash;
+                        provides a starting point for each flag color &mdash;
                         adapt it to the individual fellow.</em>
                     </p>
                 </div>
@@ -1003,7 +1003,7 @@ with tab_home:
                             functional interest, probability, flag, and
                             role-alignment heuristic.</li>
                         <li><strong>Probability gauge</strong> &mdash; A Plotly
-                            gauge coloured by band with the 0.50 decision
+                            gauge colored by band with the 0.43 decision
                             threshold marked.</li>
                         <li><strong>Top contributing factors</strong> &mdash;
                             A horizontal bar chart showing which features push
@@ -1245,7 +1245,7 @@ with tab_home:
                 <p>A <span style="color:#DC2626;font-weight:600;">Red</span>
                 flag does <strong>not</strong> mean a fellow cannot succeed
                 &mdash; it means the coach&rsquo;s human judgement is especially
-                valuable. Never share raw scores or flag colours directly with
+                valuable. Never share raw scores or flag colors directly with
                 fellows. Use predictions to inform <em>your</em> coaching
                 strategy, not to label individuals.</p>
             </div>
