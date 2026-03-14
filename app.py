@@ -744,13 +744,515 @@ st.markdown("")
 # ═══════════════════════════════════════════════════════════════════════
 # SECTION 9 — Tabs
 # ═══════════════════════════════════════════════════════════════════════
-tab_exec, tab_coach, tab_detail, tab_fair, tab_model = st.tabs([
+tab_home, tab_exec, tab_coach, tab_detail, tab_fair, tab_model = st.tabs([
+    "🏠 Welcome",
     "📊 Executive Overview",
     "🎯 Coach Action Center",
     "🔍 Application Detail",
     "⚖️ Subgroup Fairness",
     "🔧 Model Insights",
 ])
+
+
+# ─────────────────────────────────────────────────────────────────────
+# TAB 0 — Welcome / Landing Page
+# ─────────────────────────────────────────────────────────────────────
+with tab_home:
+
+    # ── Hero ──────────────────────────────────────────────────
+    st.markdown(
+        """
+        <div style="
+            background: linear-gradient(135deg, #1B2A4A 0%, #2C5F8A 50%, #3B82B0 100%);
+            color: white; padding: 2.5rem 2.5rem 2rem; border-radius: 16px;
+            margin-bottom: 1.5rem;
+        ">
+            <h1 style="font-size:1.8rem;font-weight:800;margin:0 0 .4rem;
+                        letter-spacing:-0.5px;">
+                Welcome to the MLT Career Prep Dashboard
+            </h1>
+            <p style="font-size:.92rem;opacity:.88;margin:0 0 1rem;max-width:780px;
+                       line-height:1.6;">
+                This tool uses a machine-learning model trained on six years of
+                Career Prep application data to predict whether a fellow's
+                application is likely to receive an offer. It is designed to help
+                coaches prioritize support and give leaders a data-informed view
+                of cohort outcomes.
+            </p>
+            <div style="display:flex;gap:1.5rem;flex-wrap:wrap;margin-top:.6rem;">
+                <div style="background:rgba(255,255,255,.15);border-radius:10px;
+                            padding:.6rem 1rem;font-size:.78rem;">
+                    <strong>Model:</strong> LASSO Logistic Regression (L1)
+                </div>
+                <div style="background:rgba(255,255,255,.15);border-radius:10px;
+                            padding:.6rem 1rem;font-size:.78rem;">
+                    <strong>Trained:</strong> CP 2018 &ndash; 2023
+                </div>
+                <div style="background:rgba(255,255,255,.15);border-radius:10px;
+                            padding:.6rem 1rem;font-size:.78rem;">
+                    <strong>Validated:</strong> CP 2024
+                </div>
+                <div style="background:rgba(255,255,255,.15);border-radius:10px;
+                            padding:.6rem 1rem;font-size:.78rem;">
+                    <strong>Scoring:</strong> CP 2025 (current fellows)
+                </div>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    # ── Likelihood legend (always visible on landing) ─────────
+    st.markdown(
+        """
+        <div class="section-card">
+            <div class="section-title">Understanding Likelihood Flags</div>
+            <div class="section-caption">
+                Every scored application receives a colour-coded flag based on
+                its predicted offer probability.
+            </div>
+            <div style="display:flex;gap:1.2rem;flex-wrap:wrap;">
+                <div style="flex:1;min-width:200px;border-left:5px solid #DC2626;
+                            background:#FEF2F2;border-radius:10px;padding:1rem 1.2rem;">
+                    <strong style="color:#DC2626;">Red &mdash; High Support Needed</strong>
+                    <div style="font-size:.82rem;color:#374151;margin-top:.3rem;">
+                        Predicted probability <strong>&lt; 0.35</strong>.
+                        Historical patterns suggest long odds. Immediate,
+                        targeted coaching is recommended.
+                    </div>
+                </div>
+                <div style="flex:1;min-width:200px;border-left:5px solid #F59E0B;
+                            background:#FFFBEB;border-radius:10px;padding:1rem 1.2rem;">
+                    <strong style="color:#D97706;">Yellow &mdash; Moderate Support</strong>
+                    <div style="font-size:.82rem;color:#374151;margin-top:.3rem;">
+                        Predicted probability <strong>0.35 &ndash; 0.60</strong>.
+                        Mixed signals &mdash; focused refinement of applications
+                        and interview prep can shift outcomes.
+                    </div>
+                </div>
+                <div style="flex:1;min-width:200px;border-left:5px solid #059669;
+                            background:#ECFDF5;border-radius:10px;padding:1rem 1.2rem;">
+                    <strong style="color:#059669;">Green &mdash; Likely Competitive</strong>
+                    <div style="font-size:.82rem;color:#374151;margin-top:.3rem;">
+                        Predicted probability <strong>&gt; 0.60</strong>.
+                        Strong historical likelihood of an offer. Focus on closing
+                        strategy and negotiation.
+                    </div>
+                </div>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    # ── Role-based guides ─────────────────────────────────────
+    st.markdown(
+        '<div class="section-title" style="font-size:1.15rem;margin-top:.6rem;">'
+        "How to Use This Dashboard"
+        "</div>",
+        unsafe_allow_html=True,
+    )
+
+    role_exec, role_coach = st.columns(2)
+
+    # ── EXECUTIVE GUIDE ───────────────────────────────────────
+    with role_exec:
+        st.markdown(
+            """
+            <div class="section-card" style="border-top:4px solid #2C5F8A;min-height:520px;">
+                <div style="font-size:.68rem;font-weight:700;text-transform:uppercase;
+                            letter-spacing:.8px;color:#2C5F8A;margin-bottom:.4rem;">
+                    Role Guide
+                </div>
+                <div class="section-title" style="font-size:1.1rem;">
+                    For Executives &amp; Program Leaders
+                </div>
+                <div style="font-size:.84rem;color:#374151;line-height:1.7;">
+                    <p style="margin-bottom:.6rem;">
+                        You need a fast, high-level read on cohort health and
+                        programme effectiveness. Start here:
+                    </p>
+                    <ol style="padding-left:1.2rem;">
+                        <li style="margin-bottom:.55rem;">
+                            <strong>KPI Strip</strong> (always visible at the top)
+                            &mdash; Scan total applications scored, predicted
+                            offered/denied split, and model accuracy (Precision,
+                            Recall, ROC-AUC). Hover any
+                            <span class="info-icon" style="display:inline;font-size:10px;">i</span>
+                            icon for a plain-language definition.
+                        </li>
+                        <li style="margin-bottom:.55rem;">
+                            <strong>Executive Overview tab</strong> &mdash; Review
+                            the probability distribution, support-band counts, and
+                            offer likelihood by programme track and company.
+                            The <em>Highest-Support Applications</em> table at the
+                            bottom flags the 20 most at-risk fellows for leadership
+                            awareness.
+                        </li>
+                        <li style="margin-bottom:.55rem;">
+                            <strong>Subgroup Fairness tab</strong> &mdash; Check
+                            whether any demographic group is disproportionately
+                            flagged. Use the category selector to cycle through
+                            Track, Gender, Race, Ethnicity, First Generation, and
+                            Pell Grant dimensions. Disparity warnings appear
+                            automatically when a subgroup metric differs by more
+                            than 0.10 from the population.
+                        </li>
+                        <li style="margin-bottom:.55rem;">
+                            <strong>Sidebar &rarr; Downloads</strong> &mdash;
+                            Export predictions, model metrics, and coefficient
+                            CSVs for board decks or offline analysis.
+                        </li>
+                    </ol>
+                    <p style="font-size:.78rem;color:#6B7280;margin-top:.5rem;">
+                        <em>Tip: Use the cohort switcher in the sidebar to toggle
+                        between CP 2025 (current fellows) and CP 2024 (validation
+                        backtest).</em>
+                    </p>
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    # ── COACH GUIDE ───────────────────────────────────────────
+    with role_coach:
+        st.markdown(
+            """
+            <div class="section-card" style="border-top:4px solid #059669;min-height:520px;">
+                <div style="font-size:.68rem;font-weight:700;text-transform:uppercase;
+                            letter-spacing:.8px;color:#059669;margin-bottom:.4rem;">
+                    Role Guide
+                </div>
+                <div class="section-title" style="font-size:1.1rem;">
+                    For Coaches
+                </div>
+                <div style="font-size:.84rem;color:#374151;line-height:1.7;">
+                    <p style="margin-bottom:.6rem;">
+                        Your primary workspace is the <strong>Coach Action
+                        Center</strong>. Here is a recommended workflow:
+                    </p>
+                    <ol style="padding-left:1.2rem;">
+                        <li style="margin-bottom:.55rem;">
+                            <strong>Filter your caseload</strong> &mdash; Use
+                            the Coach, Track, Company, Functional Interest,
+                            Likelihood Flag, and Predicted Outcome dropdowns to
+                            narrow the table to your fellows.
+                        </li>
+                        <li style="margin-bottom:.55rem;">
+                            <strong>Sort by &ldquo;Lowest first&rdquo;</strong>
+                            &mdash; Red-flagged fellows appear at the top so you
+                            can prioritise immediate interventions.
+                        </li>
+                        <li style="margin-bottom:.55rem;">
+                            <strong>Company Likelihood Explorer</strong> &mdash;
+                            Select a fellow and compare how their predicted
+                            probability changes across different companies. Use
+                            this to help fellows target higher-probability matches.
+                        </li>
+                        <li style="margin-bottom:.55rem;">
+                            <strong>Application Detail tab</strong> &mdash;
+                            Select any row to see the probability gauge, top
+                            contributing factors, and a plain-English
+                            interpretation of what is helping or hurting the
+                            prediction. Record session notes at the bottom.
+                        </li>
+                        <li style="margin-bottom:.55rem;">
+                            <strong>Export</strong> &mdash; Download your filtered
+                            table as a CSV to share with your team or attach to
+                            coaching logs.
+                        </li>
+                    </ol>
+                    <p style="font-size:.78rem;color:#6B7280;margin-top:.5rem;">
+                        <em>Tip: The &ldquo;Suggested Coach Action&rdquo; column
+                        provides a starting point for each flag colour &mdash;
+                        adapt it to the individual fellow.</em>
+                    </p>
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    # ── Feature-by-feature guides ─────────────────────────────
+    st.markdown(
+        '<div class="section-title" style="font-size:1.15rem;margin-top:.4rem;">'
+        "Feature Guides"
+        "</div>",
+        unsafe_allow_html=True,
+    )
+
+    fg1, fg2, fg3 = st.columns(3)
+
+    # Application Detail guide
+    with fg1:
+        st.markdown(
+            """
+            <div class="section-card" style="min-height:440px;">
+                <div style="font-size:1.3rem;margin-bottom:.4rem;">🔍</div>
+                <div class="section-title">Application Detail</div>
+                <div style="font-size:.82rem;color:#374151;line-height:1.65;">
+                    <p><strong>What it does:</strong> Deep-dive into a single
+                    application&rsquo;s prediction.</p>
+                    <p><strong>How to use it:</strong></p>
+                    <ul style="padding-left:1.1rem;">
+                        <li><strong>Select</strong> an application from the
+                            dropdown (sorted by probability, lowest first).</li>
+                        <li><strong>Profile card</strong> &mdash; At a glance:
+                            enrollment ID, coach, track, company, title,
+                            functional interest, probability, flag, and
+                            role-alignment heuristic.</li>
+                        <li><strong>Probability gauge</strong> &mdash; A Plotly
+                            gauge coloured by band with the 0.50 decision
+                            threshold marked.</li>
+                        <li><strong>Top contributing factors</strong> &mdash;
+                            A horizontal bar chart showing which features push
+                            the probability up (green) or down (red), with a
+                            plain-English paragraph explaining the key drivers.</li>
+                        <li><strong>Coach Notes</strong> &mdash; A free-text area
+                            for session notes. Notes persist only while the
+                            browser tab is open.</li>
+                    </ul>
+                    <p style="font-size:.78rem;color:#6B7280;margin-top:.4rem;">
+                        <em>Best for: one-on-one coaching sessions where you need
+                        to explain &ldquo;why&rdquo; the model scores a fellow a
+                        certain way.</em>
+                    </p>
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    # Subgroup Fairness guide
+    with fg2:
+        st.markdown(
+            """
+            <div class="section-card" style="min-height:440px;">
+                <div style="font-size:1.3rem;margin-bottom:.4rem;">⚖️</div>
+                <div class="section-title">Subgroup Fairness</div>
+                <div style="font-size:.82rem;color:#374151;line-height:1.65;">
+                    <p><strong>What it does:</strong> Monitors whether the model
+                    treats demographic groups equitably.</p>
+                    <p><strong>How to use it:</strong></p>
+                    <ul style="padding-left:1.1rem;">
+                        <li><strong>Category selector</strong> &mdash; Choose
+                            from Programme Track, First Generation, Low Income,
+                            Gender, Race, Ethnicity, or Pell Grant.</li>
+                        <li><strong>Metrics table</strong> &mdash; Shows Count,
+                            Actual Offer Rate, Avg Predicted Prob, Precision,
+                            Recall, FPR, and FNR for each subgroup.</li>
+                        <li><strong>Recall / FNR chart</strong> &mdash; Side-by-side
+                            bars make it easy to spot which groups have more
+                            missed offers (high FNR).</li>
+                        <li><strong>Avg Predicted Prob chart</strong> &mdash;
+                            Highlights groups that consistently receive lower
+                            model scores.</li>
+                        <li><strong>Disparity flags</strong> &mdash; Automatic
+                            warnings appear when a subgroup&rsquo;s Recall or
+                            FNR differs from the overall by more than 0.10.</li>
+                        <li><strong>Export</strong> &mdash; Download the full
+                            fairness table as a CSV.</li>
+                    </ul>
+                    <p style="font-size:.78rem;color:#6B7280;margin-top:.4rem;">
+                        <em>Best for: team reviews, board reporting, and
+                        proactive equity monitoring.</em>
+                    </p>
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    # Model Insights guide
+    with fg3:
+        st.markdown(
+            """
+            <div class="section-card" style="min-height:440px;">
+                <div style="font-size:1.3rem;margin-bottom:.4rem;">🔧</div>
+                <div class="section-title">Model Insights</div>
+                <div style="font-size:.82rem;color:#374151;line-height:1.65;">
+                    <p><strong>What it does:</strong> Exposes the full model
+                    configuration and performance so you can assess its
+                    strengths and limitations.</p>
+                    <p><strong>How to use it:</strong></p>
+                    <ul style="padding-left:1.1rem;">
+                        <li><strong>Model Configuration</strong> &mdash;
+                            Algorithm, class weights, cross-validation strategy,
+                            best regularization (C), threshold, intercept, train
+                            cohorts, and feature counts. Every number has an
+                            <span class="info-icon" style="display:inline;
+                            font-size:10px;">i</span> tooltip.</li>
+                        <li><strong>Positive / Negative coefficient lists</strong>
+                            &mdash; See at a glance which features the model
+                            says help versus hurt offer odds.</li>
+                        <li><strong>Coefficient bar chart</strong> &mdash; Sorted
+                            by absolute magnitude &mdash; the widest bars are
+                            the most influential features.</li>
+                        <li><strong>Coefficient table</strong> &mdash; Searchable
+                            table with readable names and raw internal names.</li>
+                        <li><strong>Performance metrics</strong> &mdash; Precision,
+                            Recall, ROC-AUC, F1, and Accuracy for both the
+                            CP 2024 validation set and (where ground truth is
+                            available) the CP 2025 scoring set.</li>
+                    </ul>
+                    <p style="font-size:.78rem;color:#6B7280;margin-top:.4rem;">
+                        <em>Best for: data-science review, audit documentation,
+                        and stakeholder transparency.</em>
+                    </p>
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    # ── Quick-reference workflow table ─────────────────────────
+    st.markdown(
+        """
+        <div class="section-card">
+            <div class="section-title">Quick-Reference Workflow</div>
+            <div style="font-size:.84rem;color:#374151;line-height:1.75;">
+                <table style="width:100%;border-collapse:collapse;">
+                    <thead>
+                        <tr style="border-bottom:2px solid #E5E7EB;">
+                            <th style="text-align:center;padding:.5rem .6rem;
+                                       font-size:.72rem;color:#6B7280;
+                                       text-transform:uppercase;letter-spacing:.5px;">
+                                Step</th>
+                            <th style="text-align:left;padding:.5rem .6rem;
+                                       font-size:.72rem;color:#6B7280;
+                                       text-transform:uppercase;letter-spacing:.5px;">
+                                Action</th>
+                            <th style="text-align:left;padding:.5rem .6rem;
+                                       font-size:.72rem;color:#6B7280;
+                                       text-transform:uppercase;letter-spacing:.5px;">
+                                Tab</th>
+                            <th style="text-align:left;padding:.5rem .6rem;
+                                       font-size:.72rem;color:#6B7280;
+                                       text-transform:uppercase;letter-spacing:.5px;">
+                                Audience</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom:1px solid #F0F0F3;">
+                            <td style="text-align:center;padding:.5rem .6rem;
+                                       font-weight:700;color:#2C5F8A;">1</td>
+                            <td style="padding:.5rem .6rem;">
+                                Scan KPI strip for cohort health</td>
+                            <td style="padding:.5rem .6rem;">
+                                <em>Always visible</em></td>
+                            <td style="padding:.5rem .6rem;">Everyone</td>
+                        </tr>
+                        <tr style="border-bottom:1px solid #F0F0F3;">
+                            <td style="text-align:center;padding:.5rem .6rem;
+                                       font-weight:700;color:#2C5F8A;">2</td>
+                            <td style="padding:.5rem .6rem;">
+                                Review distributions and top companies</td>
+                            <td style="padding:.5rem .6rem;">
+                                Executive Overview</td>
+                            <td style="padding:.5rem .6rem;">Executives</td>
+                        </tr>
+                        <tr style="border-bottom:1px solid #F0F0F3;">
+                            <td style="text-align:center;padding:.5rem .6rem;
+                                       font-weight:700;color:#2C5F8A;">3</td>
+                            <td style="padding:.5rem .6rem;">
+                                Filter &amp; sort your fellows; explore company
+                                fit</td>
+                            <td style="padding:.5rem .6rem;">
+                                Coach Action Center</td>
+                            <td style="padding:.5rem .6rem;">Coaches</td>
+                        </tr>
+                        <tr style="border-bottom:1px solid #F0F0F3;">
+                            <td style="text-align:center;padding:.5rem .6rem;
+                                       font-weight:700;color:#2C5F8A;">4</td>
+                            <td style="padding:.5rem .6rem;">
+                                Drill into one application&rsquo;s drivers
+                                &amp; add notes</td>
+                            <td style="padding:.5rem .6rem;">
+                                Application Detail</td>
+                            <td style="padding:.5rem .6rem;">Coaches</td>
+                        </tr>
+                        <tr style="border-bottom:1px solid #F0F0F3;">
+                            <td style="text-align:center;padding:.5rem .6rem;
+                                       font-weight:700;color:#2C5F8A;">5</td>
+                            <td style="padding:.5rem .6rem;">
+                                Check subgroup equity &amp; flag disparities</td>
+                            <td style="padding:.5rem .6rem;">
+                                Subgroup Fairness</td>
+                            <td style="padding:.5rem .6rem;">Everyone</td>
+                        </tr>
+                        <tr style="border-bottom:1px solid #F0F0F3;">
+                            <td style="text-align:center;padding:.5rem .6rem;
+                                       font-weight:700;color:#2C5F8A;">6</td>
+                            <td style="padding:.5rem .6rem;">
+                                Inspect model coefficients &amp; accuracy</td>
+                            <td style="padding:.5rem .6rem;">
+                                Model Insights</td>
+                            <td style="padding:.5rem .6rem;">
+                                Data&nbsp;team / Auditors</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:center;padding:.5rem .6rem;
+                                       font-weight:700;color:#2C5F8A;">7</td>
+                            <td style="padding:.5rem .6rem;">
+                                Export CSVs for records or presentations</td>
+                            <td style="padding:.5rem .6rem;">
+                                Sidebar &rarr; Downloads</td>
+                            <td style="padding:.5rem .6rem;">Everyone</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    # ── Important caveats ─────────────────────────────────────
+    st.markdown(
+        """
+        <div class="section-card" style="border-left:4px solid #F59E0B;">
+            <div class="section-title" style="color:#D97706;">
+                Important: What the Model Does Not Know
+            </div>
+            <div style="font-size:.84rem;color:#374151;line-height:1.7;">
+                <p>This model identifies <em>statistical tendencies</em> from
+                prior cohorts. It <strong>cannot</strong> observe:</p>
+                <div style="display:flex;flex-wrap:wrap;gap:.5rem .8rem;
+                            margin:.5rem 0 .8rem;">
+                    <span style="background:#F3F4F6;border-radius:8px;
+                                 padding:.3rem .7rem;font-size:.78rem;">
+                        Interview performance</span>
+                    <span style="background:#F3F4F6;border-radius:8px;
+                                 padding:.3rem .7rem;font-size:.78rem;">
+                        Networking &amp; referrals</span>
+                    <span style="background:#F3F4F6;border-radius:8px;
+                                 padding:.3rem .7rem;font-size:.78rem;">
+                        Personal narrative</span>
+                    <span style="background:#F3F4F6;border-radius:8px;
+                                 padding:.3rem .7rem;font-size:.78rem;">
+                        Market timing</span>
+                    <span style="background:#F3F4F6;border-radius:8px;
+                                 padding:.3rem .7rem;font-size:.78rem;">
+                        Culture fit</span>
+                    <span style="background:#F3F4F6;border-radius:8px;
+                                 padding:.3rem .7rem;font-size:.78rem;">
+                        Recent skill development</span>
+                    <span style="background:#F3F4F6;border-radius:8px;
+                                 padding:.3rem .7rem;font-size:.78rem;">
+                        Family or health circumstances</span>
+                </div>
+                <p>A <span style="color:#DC2626;font-weight:600;">Red</span>
+                flag does <strong>not</strong> mean a fellow cannot succeed
+                &mdash; it means the coach&rsquo;s human judgement is especially
+                valuable. Never share raw scores or flag colours directly with
+                fellows. Use predictions to inform <em>your</em> coaching
+                strategy, not to label individuals.</p>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
 
 # ─────────────────────────────────────────────────────────────────────
